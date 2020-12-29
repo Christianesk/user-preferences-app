@@ -10,6 +10,20 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+
+  bool _secondaryColor = true;
+  int _gender = 1;
+  String _name = 'Rick';
+
+  TextEditingController _textEditingController;
+
+  @override
+  void initState() {
+    super.initState();
+    _textEditingController = new TextEditingController(text: _name);
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,35 +35,42 @@ class _SettingsPageState extends State<SettingsPage> {
       body: ListView(
         children: <Widget>[
           SwitchListTile(
-            value: true,
+            value: _secondaryColor,
             title: Text('Secondary Color'),
             onChanged: (value) {
-              
+              setState(() {
+                _secondaryColor = value;
+              });
             },
           ),
           RadioListTile(
             value: 1,
             title: Text('Male'),
-            groupValue: 1,
+            groupValue: _gender,
             onChanged: (value) {
-              
+              setState(() {
+                _gender = value;
+              });
             },
           ),
           RadioListTile(
             value: 2,
             title: Text('Female'),
-            groupValue: 1,
+            groupValue: _gender,
             onChanged: (value) {
-              
+              setState(() {
+                _gender = value;
+              });
             },
           ),
           Divider(),
           Container(
             padding: EdgeInsets.symmetric(horizontal: 20.0),
             child: TextField(
+              controller: _textEditingController,
               decoration: InputDecoration(
                 labelText: 'Name',
-                helperText: 'You name'
+                helperText: 'You name',
               ),
               onChanged: (value) {
                 
