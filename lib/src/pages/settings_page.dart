@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:user_preferences_app/src/shared_preferences/user_preferences.dart';
 import 'package:user_preferences_app/src/widgets/menu_widget.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -11,16 +12,21 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
 
-  bool _secondaryColor = true;
-  int _gender = 1;
-  String _name = 'Rick';
+  bool _secondaryColor;
+  int _gender;
+  String _name;
 
   TextEditingController _textEditingController;
+
+  final prefs = new UserPreferences();
 
   @override
   void initState() {
     super.initState();
-    _textEditingController = new TextEditingController(text: _name);
+    prefs.lastPage = SettingsPage.routeName;
+    _gender = prefs.gender;
+    _secondaryColor = prefs.secondaryColor;
+    _textEditingController = new TextEditingController(text: prefs.name);
   }
 
 
@@ -30,6 +36,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
       appBar: AppBar(
         title: Text('Settings'),
+        backgroundColor: (prefs.secondaryColor) ? Colors.blue : Colors.tealAccent,
       ),
       drawer: MenuWidget(),
       body: ListView(
@@ -40,6 +47,7 @@ class _SettingsPageState extends State<SettingsPage> {
             onChanged: (value) {
               setState(() {
                 _secondaryColor = value;
+                prefs.secondaryColor = value;
               });
             },
           ),
@@ -47,21 +55,13 @@ class _SettingsPageState extends State<SettingsPage> {
             value: 1,
             title: Text('Male'),
             groupValue: _gender,
-            onChanged: (value) {
-              setState(() {
-                _gender = value;
-              });
-            },
+            onChanged: _setSelectedRadio,
           ),
           RadioListTile(
             value: 2,
             title: Text('Female'),
             groupValue: _gender,
-            onChanged: (value) {
-              setState(() {
-                _gender = value;
-              });
-            },
+            onChanged: _setSelectedRadio,
           ),
           Divider(),
           Container(
@@ -73,7 +73,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 helperText: 'You name',
               ),
               onChanged: (value) {
-                
+                prefs.name = value;
               },
             ),
           )
@@ -82,4 +82,14 @@ class _SettingsPageState extends State<SettingsPage> {
       
     );
   }
+
+  _setSelectedRadio(int value) {
+
+    prefs.gender = value;
+
+    _gender = value;
+
+    setState(() {});
+  }
+
 }
